@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>provenance — know your worth. plan your exit.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080d1a;
+    --bg2: #0c1220;
+    --bg3: #111827;
+    --card: #0f1829;
+    --white: #f0f4ff;
+    --muted: #4a5568;
+    --dim: #8899bb;
+    --accent: #4a9eff;
+    --accent2: #7bb8ff;
+    --accent-dim: #1a3a6e;
+    --red: #ff6b6b;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    background: rgba(8, 13, 26, 0.7);
+    border-bottom: 0.5px solid rgba(74, 158, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .nav-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    font-size: 1.4rem;
+    letter-spacing: 0.2em;
+    color: var(--white);
+  }
+
+  .nav-cta {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border: 0.5px solid var(--accent-dim);
+    padding: 0.5rem 1.25rem;
+    transition: all 0.25s ease;
+  }
+
+  .nav-cta:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    animation: drift 12s ease-in-out infinite alternate;
+  }
+
+  .orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(74,158,255,0.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(74,158,255,0.07) 0%, transparent 70%);
+    bottom: 100px; left: -80px;
+    animation-delay: -4s;
+  }
+
+  .orb-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(123,184,255,0.06) 0%, transparent 70%);
+    top: 40%; left: 40%;
+    animation-delay: -8s;
+  }
+
+  @keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, -40px) scale(1.05); }
+  }
+
+  /* Grid lines */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,158,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,158,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-wordmark {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    font-size: clamp(4rem, 10vw, 8rem);
+    letter-spacing: 0.12em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.4s;
+  }
+
+  .hero-tagline {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+    color: var(--dim);
+    line-height: 1.5;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.6s;
+  }
+
+  .hero-tagline span { color: var(--accent); }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 560px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.8s;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 1.0s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    transition: all 0.25s ease;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent2);
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    border: 0.5px solid var(--muted);
+    transition: all 0.25s ease;
+    display: inline-block;
+  }
+
+  .btn-ghost:hover {
+    color: var(--white);
+    border-color: var(--accent);
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.5s;
+  }
+
+  .scroll-hint span {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── STAT BAR ── */
+  .stat-bar {
+    background: var(--bg2);
+    border-top: 0.5px solid rgba(74,158,255,0.1);
+    border-bottom: 0.5px solid rgba(74,158,255,0.1);
+    padding: 2.5rem 3rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .stat-item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all 0.6s ease;
+  }
+
+  .stat-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .stat-num {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    font-size: 2.2rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 7rem 3rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .section-body {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.9;
+    max-width: 560px;
+    margin-bottom: 3rem;
+  }
+
+  /* ── PROBLEM SECTION ── */
+  .problem {
+    background: var(--bg);
+  }
+
+  .problem-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .big-stat-block {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg2);
+    border: 0.5px solid var(--accent-dim);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .big-stat-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .big-num {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    font-size: 7rem;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .big-num-label {
+    font-size: 0.85rem;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  .problem-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1rem;
+  }
+
+  .problem-points li {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    color: var(--dim);
+    line-height: 1.6;
+    opacity: 0;
+    transform: translateX(-16px);
+    transition: all 0.5s ease;
+  }
+
+  .problem-points li.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .point-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  /* ── COACH SECTION ── */
+  .coach { background: var(--bg2); }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 4rem;
+    max-width: 1200px;
+    background: rgba(74,158,255,0.08);
+    border: 0.5px solid rgba(74,158,255,0.08);
+  }
+
+  .feature-card {
+    background: var(--card);
+    padding: 2.5rem 2rem;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .feature-card:hover {
+    background: #121e38;
+  }
+
+  .feature-icon {
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+    display: block;
+    filter: grayscale(0.3);
+  }
+
+  .feature-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+
+  .feature-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* ── COMPARISON SECTION ── */
+  .compare { background: var(--bg); }
+
+  .compare-layout {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 0;
+    max-width: 1100px;
+    margin: 4rem auto 0;
+    align-items: stretch;
+  }
+
+  .compare-card {
+    padding: 3rem 2.5rem;
+    border: 0.5px solid rgba(74,158,255,0.12);
+    position: relative;
+  }
+
+  .compare-card.highlighted {
+    border-color: var(--accent);
+    background: rgba(74,158,255,0.04);
+  }
+
+  .compare-card.highlighted::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .compare-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .compare-label.muted { color: var(--muted); }
+  .compare-label.accent { color: var(--accent); }
+
+  .compare-multiple {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    font-size: 4.5rem;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .compare-multiple.red { color: var(--red); }
+  .compare-multiple.blue { color: var(--accent); }
+
+  .compare-sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .compare-divider {
+    border: none;
+    border-top: 0.5px solid rgba(74,158,255,0.1);
+    margin-bottom: 1.5rem;
+  }
+
+  .compare-value {
+    font-size: 1rem;
+    color: var(--dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .compare-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .vs-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vs-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 0.5px solid var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    background: var(--bg);
+  }
+
+  .delta-banner {
+    background: var(--accent);
+    color: var(--bg);
+    text-align: center;
+    padding: 1.2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── FEE SECTION ── */
+  .fees { background: var(--bg2); }
+
+  .fee-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    max-width: 900px;
+    margin: 4rem auto 0;
+    background: rgba(74,158,255,0.08);
+  }
+
+  .fee-card {
+    background: var(--card);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fee-card.featured {
+    background: #0d1f3c;
+  }
+
+  .fee-card.featured::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .fee-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .fee-card.featured .fee-label { color: var(--accent); }
+
+  .fee-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  hr.fee-divider {
+    border: none;
+    border-top: 0.5px solid rgba(74,158,255,0.12);
+    margin: 1.5rem 0;
+  }
+
+  .fee-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.9;
+    margin-bottom: 1.5rem;
+  }
+
+  .fee-note {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    padding: 0.6rem 1rem;
+    border: 0.5px solid var(--accent-dim);
+    display: inline-block;
+  }
+
+  .fee-card.featured .fee-note {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+    background: rgba(74,158,255,0.06);
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    background: var(--bg);
+    text-align: center;
+    padding: 8rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section .orb-1 {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(74,158,255,0.08) 0%, transparent 70%);
+    animation: none;
+  }
+
+  .cta-wordmark {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: 0.15em;
+    color: var(--white);
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-line {
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+    margin: 1.5rem auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-quote {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--dim);
+    margin-bottom: 3.5rem;
+    position: relative;
+    z-index: 2;
+    line-height: 1.7;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 4rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 0.5px solid rgba(74,158,255,0.1);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg2);
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 200;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+  }
+
+  .footer-note {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: all 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    section { padding: 5rem 1.5rem; }
+    .stat-bar { grid-template-columns: repeat(2, 1fr); padding: 2rem 1.5rem; }
+    .problem-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .compare-layout { grid-template-columns: 1fr; }
+    .vs-col { display: none; }
+    .fee-layout { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">provenance</div>
+  <a href="#contact" class="nav-cta">Request Access</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">For RIA owners who intend to exit on their own terms</p>
+    <h1 class="hero-wordmark">provenance</h1>
+    <p class="hero-tagline">
+      Every great asset has a provenance.<br>
+      <span>So does every great practice.</span>
+    </p>
+    <p class="hero-desc">
+      A continuous business intelligence and advisory platform that builds toward your exit every single day — delivering real value now and a superior outcome when it matters most.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Request Early Access</a>
+      <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STAT BAR -->
+<div class="stat-bar">
+  <div class="stat-item">
+    <span class="stat-num">80%</span>
+    <span class="stat-label">of net worth tied up in the practice</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">1%</span>
+    <span class="stat-label">of advisors have a formal exit plan</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">5–7 yr</span>
+    <span class="stat-label">needed for meaningful preparation</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">+0.7×</span>
+    <span class="stat-label">additional multiple with proper prep</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="how-it-works">
+  <div class="problem-layout">
+    <div>
+      <p class="section-eyebrow reveal">The Problem</p>
+      <h2 class="section-title reveal">Most owners have no idea what their practice is <em>quietly losing.</em></h2>
+      <p class="section-body reveal">By the time you engage a banker, the damage is already priced in. Concentration discounts. Aging demographics. Revenue volatility. All fixable with time — invisible without a tool.</p>
+      <ul class="problem-points">
+        <li><div class="point-dot"></div>Revenue scattered across disconnected systems with no unified view</li>
+        <li><div class="point-dot"></div>Client concentration risk hiding in plain sight until a buyer finds it</li>
+        <li><div class="point-dot"></div>Aging client demographics quietly compressing your exit multiple</li>
+        <li><div class="point-dot"></div>No early warning system. No peer benchmarking. No narrative.</li>
+        <li><div class="point-dot"></div>Advisors engage bankers when emotionally ready — not strategically ready</li>
+      </ul>
+    </div>
+    <div class="big-stat-block reveal">
+      <span class="big-num">3.5×</span>
+      <p class="big-num-label">The average exit multiple for an<br>unprepared $500M AUM practice</p>
+      <br>
+      <span class="big-num" style="color: var(--accent); font-size: 5rem;">4.2×</span>
+      <p class="big-num-label">The same practice with<br>two years of Provenance</p>
+      <br><br>
+      <div style="background: var(--accent); padding: 0.8rem 1.5rem; display: inline-block;">
+        <span style="font-size: 0.85rem; font-weight: 500; color: var(--bg); letter-spacing: 0.1em;">+$3.5M ON SAME PRACTICE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COACH LAYER -->
+<section class="coach" id="features">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <p class="section-eyebrow reveal">The Business Coach Layer</p>
+    <h2 class="section-title reveal">Value delivered <em>today</em> — not just at exit.</h2>
+    <p class="section-body reveal">Most advisors won't sell for 5–7 years. Provenance earns its place right now — as an embedded CFO and business coach — and delivers an exceptional exit payoff at the end.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="feature-icon">⚠️</span>
+        <h3 class="feature-title">Leaky Asset Detection</h3>
+        <p class="feature-desc">Flags declining AUM, dormant accounts, and consolidation opportunities before they become buyer discounts at the negotiating table.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">👥</span>
+        <h3 class="feature-title">Demographic Risk Alerts</h3>
+        <p class="feature-desc">Identifies aging client cohorts where intergenerational wealth transfer risk is high — and prompts proactive action years in advance.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📊</span>
+        <h3 class="feature-title">P&L Anomaly Detection</h3>
+        <p class="feature-desc">Spots margin compression, fee leakage, and unusual expense patterns before they become a buyer's negotiating chips.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📈</span>
+        <h3 class="feature-title">Growth Signal Surfacing</h3>
+        <p class="feature-desc">Shows which client segments are growing fastest, which referral sources are most productive, and where to focus next.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🏆</span>
+        <h3 class="feature-title">Peer Benchmarking</h3>
+        <p class="feature-desc">Compares your practice against anonymized RIA peers on the metrics buyers actually underwrite — so you know where you stand.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🔗</span>
+        <h3 class="feature-title">Platform Integration</h3>
+        <p class="feature-desc">Connects with your existing stack — Orion, Black Diamond, Salesforce — for a unified, always-current view of your business.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="compare" id="results">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <p class="section-eyebrow reveal">The Exit Readiness Layer</p>
+    <h2 class="section-title reveal">When a buyer shows up, you're ready in <em>weeks — not months.</em></h2>
+    <p class="section-body reveal">Provenance builds your data room continuously. Clean financials, verified client analysis, a compelling growth narrative — all updated in real time, not assembled under pressure.</p>
+  </div>
+
+  <div class="compare-layout">
+    <div class="compare-card reveal">
+      <p class="compare-label muted">Without Provenance</p>
+      <span class="compare-multiple red">3.5×</span>
+      <p class="compare-sub">exit multiple</p>
+      <hr class="compare-divider">
+      <p class="compare-value">$17.5M total value</p>
+      <p class="compare-note">Messy data room, rushed preparation, concentration discounts applied by buyer. 6–9 months to close — if it closes at all.</p>
+    </div>
+    <div class="vs-col">
+      <div class="vs-badge">VS</div>
+    </div>
+    <div class="compare-card highlighted reveal">
+      <p class="compare-label accent">With Provenance</p>
+      <span class="compare-multiple blue">4.2×</span>
+      <p class="compare-sub">exit multiple</p>
+      <hr class="compare-divider">
+      <p class="compare-value" style="color: var(--white);">$21.0M total value</p>
+      <p class="compare-note">Clean narrative, verified data, buyer-ready from day one. Competitive process. Maximum leverage.</p>
+    </div>
+  </div>
+  <div class="delta-banner reveal">+$3.5M delta on the same practice &nbsp;·&nbsp; same AUM &nbsp;·&nbsp; same clients</div>
+</section>
+
+<!-- FEES -->
+<section class="fees" id="pricing">
+  <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+    <p class="section-eyebrow reveal">Aligned by Design</p>
+    <h2 class="section-title reveal" style="margin: 0 auto 1rem; text-align: center;">We only win meaningfully<br><em>when you do.</em></h2>
+    <p class="section-body reveal" style="margin: 0 auto 0; text-align: center;">A fee structure built around one idea: Provenance's interests and yours are perfectly aligned at every moment — not just at the close.</p>
+  </div>
+
+  <div class="fee-layout">
+    <div class="fee-card reveal">
+      <p class="fee-label">Quarterly Retainer</p>
+      <h3 class="fee-amount">Modest flat fee</h3>
+      <hr class="fee-divider">
+      <p class="fee-desc">Covers continuous platform access, data integration, coaching alerts, and peer benchmarking. Begins delivering measurable value to your practice from day one.</p>
+      <span class="fee-note">Credited in full at close</span>
+    </div>
+    <div class="fee-card featured reveal">
+      <p class="fee-label">Success Fee</p>
+      <h3 class="fee-amount">% of proceeds<br>above hurdle</h3>
+      <hr class="fee-divider">
+      <p class="fee-desc">A performance fee applied only to value generated above a baseline hurdle rate — ensuring Provenance is incentivized to maximize your outcome, not just complete a transaction.</p>
+      <span class="fee-note">Offset by retainer paid</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="orb orb-1"></div>
+  <p class="cta-wordmark">provenance</p>
+  <div class="cta-line"></div>
+  <p class="cta-quote">
+    The best time to start was five years ago.<br>
+    The second best time is today.
+  </p>
+  <div class="cta-actions">
+    <a href="mailto:cooper@provenance.io" class="btn-primary">Request Early Access</a>
+    <a href="mailto:cooper@provenance.io" class="btn-ghost">Schedule a Conversation</a>
+  </div>
+  <p style="font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; position: relative; z-index: 2;">
+    Custodian-agnostic &nbsp;·&nbsp; Built for independence &nbsp;·&nbsp; Your exit, your terms
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">provenance</div>
+  <p class="footer-note">© 2025 Provenance &nbsp;·&nbsp; All content hypothetical &nbsp;·&nbsp; Built for Betterment Advisor Solutions case study</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, entry.target.dataset.delay || 0);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal, .stat-item, .feature-card').forEach((el, i) => {
+    el.dataset.delay = (i % 4) * 100;
+    observer.observe(el);
+  });
+
+  // Staggered problem points
+  const pointObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const points = entry.target.querySelectorAll('.problem-points li');
+        points.forEach((p, i) => {
+          setTimeout(() => p.classList.add('visible'), i * 120);
+        });
+        pointObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.problem-layout').forEach(el => pointObserver.observe(el));
+
+  // Nav shrink on scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.padding = window.scrollY > 50 ? '1rem 3rem' : '1.5rem 3rem';
+  });
+</script>
+</body>
+</html>
